@@ -1,0 +1,4 @@
+# Permanent redirects for hosts that support this file (Cloudflare Pages / Netlify).
+# On GitHub Pages the root page carries an equivalent <meta http-equiv="refresh"> redirect.
+/            /he/   301
+/index.html  /he/   301

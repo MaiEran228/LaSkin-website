@@ -1,0 +1,96 @@
+---
+import '../styles/global.css';
+import type { Lang } from '../i18n';
+import { t } from '../i18n';
+import { SITE, googleMapsUrl } from '../data/site';
+import { absoluteUrl, alternates, withBase, INDEXABLE, IS_PREVIEW, ORIGIN, type RouteKey } from '../lib/routes';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyBar from '../components/StickyBar.astro';
+import heeboHe from '../assets/fonts/heebo-hebrew-200.woff2';
+import assistantHe from '../assets/fonts/assistant-hebrew-400.woff2';
+import heeboLatin from '../assets/fonts/heebo-latin-200.woff2';
+import assistantLatin from '../assets/fonts/assistant-latin-400.woff2';
+import notoAr from '../assets/fonts/noto-sans-arabic-arabic-400.woff2';
+
+interface Props {
+  lang: Lang;
+  route: RouteKey;
+  title: string;
+  description: string;
+  /** Extra JSON-LD objects (e.g. BreadcrumbList) appended to the business schema. */
+  jsonLd?: Record<string, unknown>[];
+}
+const { lang, route, title, description, jsonLd = [] } = Astro.props;
+const dict = t(lang);
+const canonical = absoluteUrl(lang, route);
+const indexable = INDEXABLE[route] && !IS_PREVIEW;
+const ogImage = `${ORIGIN}${withBase('/og-image.jpg')}`;
+const preloadFonts = lang === 'ar' ? [notoAr, assistantLatin] : lang === 'he' ? [heeboHe, assistantHe] : [heeboLatin, assistantLatin];
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthAndBeautyBusiness',
+  '@id': `${SITE.productionOrigin}/#business`,
+  name: SITE.legalName,
+  url: canonical,
+  telephone: '+972-58-570-0051',
+  email: SITE.email,
+  image: ogImage,
+  logo: `${ORIGIN}${withBase('/icon-512.png')}`,
+  address: { '@type': 'PostalAddress', streetAddress: 'Mevo HaHoresh 10', addressLocality: 'Har Adar', addressCountry: 'IL' },
+  hasMap: googleMapsUrl,
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: SITE.hours.weekdays.opens, closes: SITE.hours.weekdays.closes },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Friday'], opens: SITE.hours.friday.opens, closes: SITE.hours.friday.closes },
+  ],
+  sameAs: [SITE.facebook],
+  inLanguage: lang,
+};
+const ld = JSON.stringify(jsonLd.length ? [business, ...jsonLd] : business);
+const csp = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+---
+<!doctype html>
+<html lang={lang} dir={dict.dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={indexable ? 'index,follow' : 'noindex,follow'} />
+    <link rel="canonical" href={canonical} />
+    {alternates(route).map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="La Skin" />
+    <meta property="og:locale" content={dict.locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={dict.alt.lobby} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#4D473B" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('/favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    {preloadFonts.map((f) => <link rel="preload" as="font" type="font/woff2" href={f} crossorigin />)}
+    <script type="application/ld+json" set:html={ld} />
+  </head>
+  <body data-lang={lang} data-route={route}>
+    <Header lang={lang} route={route} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer lang={lang} route={route} />
+    <StickyBar lang={lang} />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

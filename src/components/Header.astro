@@ -1,0 +1,59 @@
+---
+import { Image } from 'astro:assets';
+import { LANGS, t, type Lang } from '../i18n';
+import { href, type RouteKey } from '../lib/routes';
+import { WA_MESSAGE, whatsappUrl } from '../data/site';
+import Icons from './Icons.astro';
+import logo from '../assets/img/logo-mark.png';
+
+interface Props { lang: Lang; route: RouteKey }
+const { lang, route } = Astro.props;
+const dict = t(lang);
+const isHome = route === 'home';
+const home = href(lang, 'home');
+const anchors = ['#tech', '#clinic', null, '#faq', '#contact'] as const;
+const items = dict.nav.map((label, i) => ({
+  label,
+  href: i === 2 ? href(lang, 'studies') : isHome ? anchors[i]! : `${home}${anchors[i]}`,
+  track: i === 2 ? 'studies' : anchors[i]!,
+}));
+const wa = whatsappUrl(WA_MESSAGE[lang]);
+const langLabel: Record<Lang, string> = { he: 'HE', ar: 'AR', en: 'EN' };
+---
+<header class="header">
+  <a class="skip" href="#main">{dict.skip}</a>
+  <div class="container header__bar">
+    <a class="brand" href={home} aria-label="La Skin">
+      <Image src={logo} alt="" width={92} height={92} class="brand__mark" loading="eager" />
+      <span class="brand__name" lang="en" aria-hidden="true">LA SKIN</span>
+    </a>
+    <nav class="nav" aria-label={dict.a11y.primaryNav}>
+      {items.map((it) => <a class="nav__link" href={it.href} data-track="nav_cta" data-target={it.track}>{it.label}</a>)}
+    </nav>
+    <div class="header__tools">
+      <nav class="lang" aria-label={dict.a11y.langGroup}>
+        {LANGS.map((code) => (
+          <a
+            class="lang__link"
+            href={href(code, route)}
+            hreflang={code}
+            lang={code}
+            aria-label={`${t(code).name} (${langLabel[code]})`}
+            aria-current={code === lang ? 'true' : undefined}
+            data-track="language_change"
+            data-to={code}
+          >{langLabel[code]}</a>
+        ))}
+      </nav>
+      <a class="btn btn--wa btn--sm header__cta" href={wa} target="_blank" rel="noopener" data-wa data-track="whatsapp_click" data-placement="header">
+        <Icons name="wa" size={17} /><span>{dict.cta.short}</span>
+      </a>
+      <button type="button" class="burger" aria-expanded="false" aria-controls="mobile-menu" aria-label={dict.a11y.menuOpen} data-label-open={dict.a11y.menuOpen} data-label-close={dict.a11y.menuClose}>
+        <Icons name="menu" class="icon-open" size={20} /><Icons name="close" class="icon-close" size={20} />
+      </button>
+    </div>
+  </div>
+  <nav id="mobile-menu" class="mobile-menu" aria-label={dict.a11y.primaryNav} hidden>
+    {items.map((it) => <a href={it.href} data-track="nav_cta" data-target={it.track}>{it.label}</a>)}
+  </nav>
+</header>

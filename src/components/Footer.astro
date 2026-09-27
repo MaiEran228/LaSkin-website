@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import { t, type Lang } from '../i18n';
+import { href, type RouteKey } from '../lib/routes';
+import { SITE } from '../data/site';
+import logo from '../assets/img/logo-mark.png';
+
+interface Props { lang: Lang; route: RouteKey }
+const { lang, route } = Astro.props;
+const dict = t(lang);
+const home = href(lang, 'home');
+const prefix = route === 'home' ? '' : home;
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <Image src={logo} alt={dict.alt.logo} width={112} height={112} class="footer__mark" loading="lazy" />
+        <p class="footer__tagline">{dict.footer.tagline}</p>
+        <a class="footer__social" href={SITE.facebook} target="_blank" rel="noopener">Facebook<span class="sr-only"> — {dict.footer.facebook}</span></a>
+      </div>
+      <nav class="footer__nav" aria-label={dict.a11y.footerNav}>
+        <p class="footer__k">{dict.footer.navK}</p>
+        <a href={`${prefix}#tech`}>{dict.nav[0]}</a>
+        <a href={`${prefix}#clinic`}>{dict.nav[1]}</a>
+        <a href={`${prefix}#faq`}>{dict.nav[3]}</a>
+        <a href={`${prefix}#contact`}>{dict.nav[4]}</a>
+      </nav>
+      <nav class="footer__nav" aria-label={dict.a11y.infoNav}>
+        <p class="footer__k">{dict.footer.infoK}</p>
+        <a href={href(lang, 'privacy')}>{dict.legal.privacyTab}</a>
+        <a href={href(lang, 'accessibility')}>{dict.legal.a11yTab}</a>
+        <a href={href(lang, 'studies')}>{dict.studies.crumb}</a>
+        <a href={href(lang, 'areas')}>{dict.areas.crumb}</a>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__disclaimer">{dict.footer.disclaimer}</p>
+      <p class="footer__copy" dir="ltr">© {year} La Skin</p>
+    </div>
+  </div>
+</footer>

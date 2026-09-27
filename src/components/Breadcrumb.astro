@@ -1,0 +1,19 @@
+---
+import { t, type Lang } from '../i18n';
+import { href } from '../lib/routes';
+
+interface Props { lang: Lang; items: { label: string; href?: string }[]; class?: string }
+const { lang, items, class: cls = '' } = Astro.props;
+const dict = t(lang);
+---
+<nav class={`crumbs container ${cls}`.trim()} aria-label={dict.a11y.breadcrumb}>
+  <ol>
+    <li><a href={href(lang, 'home')}>{dict.crumb.home}</a><span aria-hidden="true">›</span></li>
+    {items.map((it, i) => (
+      <li>
+        {it.href ? <a href={it.href}>{it.label}</a> : <span aria-current="page">{it.label}</span>}
+        {i < items.length - 1 && <span aria-hidden="true">›</span>}
+      </li>
+    ))}
+  </ol>
+</nav>

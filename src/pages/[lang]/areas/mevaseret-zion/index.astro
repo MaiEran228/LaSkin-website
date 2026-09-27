@@ -1,0 +1,70 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../../../layouts/Base.astro';
+import Breadcrumb from '../../../../components/Breadcrumb.astro';
+import WaButton from '../../../../components/WaButton.astro';
+import { LANGS, t, type Lang } from '../../../../i18n';
+import { absoluteUrl, href } from '../../../../lib/routes';
+import entranceImg from '../../../../assets/img/entrance.png';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: d.crumb.home, item: absoluteUrl(lang, 'home') },
+    { '@type': 'ListItem', position: 2, name: d.areas.crumb, item: absoluteUrl(lang, 'areas') },
+    { '@type': 'ListItem', position: 3, name: d.loc.name, item: absoluteUrl(lang, 'locality') },
+  ],
+};
+---
+<Base lang={lang} route="locality" title={d.meta.locality.title} description={d.meta.locality.desc} jsonLd={[breadcrumb]}>
+  <div class="page">
+    <Breadcrumb lang={lang} items={[{ label: d.areas.crumb, href: href(lang, 'areas') }, { label: d.loc.name }]} class="page__inner" />
+    <section class="page__inner container loc-hero">
+      <p class="eyebrow">{d.loc.eyebrow}</p>
+      <h1 class="page-title">{d.loc.h}</h1>
+      <p class="page-intro page-intro--space">{d.loc.intro}</p>
+      <WaButton lang={lang} placement="locality_page" label={d.loc.cta} extra={d.loc.waExtra} />
+    </section>
+
+    <section class="loc-stats" aria-label={d.loc.directionsH}>
+      <div class="page__inner container">
+        <ul class="loc-stats__grid">
+          {d.loc.stats.map((s) => (
+            <li class="card stat">
+              <p class="stat__k">{s.k}</p>
+              <p class="stat__v">{s.v}</p>
+              <p class="stat__note">{s.note}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="loc-body">
+      <div class="page__inner container loc-body__grid">
+        <div>
+          <h2 class="page-h2">{d.loc.directionsH}</h2>
+          <p class="loc-body__p">{d.loc.directionsP}</p>
+          <Picture src={entranceImg} widths={[480, 946]} sizes="(min-width: 56.25rem) 30rem, 100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt={d.alt.entrance} loading="lazy" decoding="async" class="loc-body__img" />
+        </div>
+        <div>
+          <h2 class="page-h2">{d.loc.faqH}</h2>
+          <div class="loc-faq">
+            {d.loc.faq.map((f) => (
+              <div class="loc-faq__item">
+                <h3 class="loc-faq__q">{f.q}</h3>
+                <p class="loc-faq__a">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>

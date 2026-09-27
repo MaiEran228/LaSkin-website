@@ -1,0 +1,23 @@
+---
+import { t, type Lang } from '../i18n';
+import { SITE, WA_MESSAGE, whatsappUrl } from '../data/site';
+import Icons from './Icons.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const dict = t(lang);
+const wa = whatsappUrl(WA_MESSAGE[lang]);
+---
+<aside aria-label={dict.a11y.quickContact}>
+<div class="sticky-bar">
+  <a class="sticky-bar__call" href={`tel:${SITE.phoneE164}`} aria-label={dict.a11y.call} data-track="phone_click" data-placement="sticky_mobile">
+    <Icons name="phone" size={22} />
+  </a>
+  <a class="btn btn--wa sticky-bar__wa" href={wa} target="_blank" rel="noopener" data-wa data-track="whatsapp_click" data-placement="sticky_mobile">
+    <Icons name="wa" size={20} /><span>{dict.cta.primary}</span>
+  </a>
+</div>
+<a class="float-wa" href={wa} target="_blank" rel="noopener" aria-label={dict.a11y.whatsapp} data-wa data-track="whatsapp_click" data-placement="floating">
+  <Icons name="wa" size={26} />
+</a>
+</aside>

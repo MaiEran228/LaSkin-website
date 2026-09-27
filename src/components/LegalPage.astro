@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, type Lang } from '../i18n';
+import { href } from '../lib/routes';
+
+interface Props { lang: Lang; kind: 'privacy' | 'accessibility' }
+const { lang, kind } = Astro.props;
+const d = t(lang);
+const meta = kind === 'privacy' ? d.meta.privacy : d.meta.accessibility;
+const title = kind === 'privacy' ? d.legal.privacyTab : d.legal.a11yTab;
+const blocks = kind === 'privacy' ? d.legal.privacy : d.legal.a11y;
+---
+<Base lang={lang} route={kind} title={meta.title} description={meta.desc}>
+  <div class="page">
+    <section class="page__inner page__inner--narrow container legal">
+      <nav class="tabs" aria-label={d.a11y.legalNav}>
+        <a href={href(lang, 'privacy')} aria-current={kind === 'privacy' ? 'page' : undefined}>{d.legal.privacyTab}</a>
+        <a href={href(lang, 'accessibility')} aria-current={kind === 'accessibility' ? 'page' : undefined}>{d.legal.a11yTab}</a>
+      </nav>
+      <h1 class="page-title">{title}</h1>
+      <p class="legal__updated">{d.legal.updated}</p>
+      {blocks.map((b) => (
+        <div class="legal__block">
+          <h2>{b.h}</h2>
+          <p>{b.p}</p>
+        </div>
+      ))}
+    </section>
+  </div>
+</Base>

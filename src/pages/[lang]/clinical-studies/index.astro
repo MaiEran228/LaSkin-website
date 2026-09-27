@@ -1,0 +1,77 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import WaButton from '../../../components/WaButton.astro';
+import Icons from '../../../components/Icons.astro';
+import { LANGS, t, type Lang } from '../../../i18n';
+import { absoluteUrl } from '../../../lib/routes';
+import { STUDY_SOURCES, doiUrl } from '../../../data/studies';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: d.crumb.home, item: absoluteUrl(lang, 'home') },
+    { '@type': 'ListItem', position: 2, name: d.studies.crumb, item: absoluteUrl(lang, 'studies') },
+  ],
+};
+---
+<Base lang={lang} route="studies" title={d.meta.studies.title} description={d.meta.studies.desc} jsonLd={[breadcrumb]}>
+  <div class="page">
+    <Breadcrumb lang={lang} items={[{ label: d.studies.crumb }]} class="page__inner" />
+    <section class="page__inner container page-hero">
+      <p class="eyebrow">{d.studies.eyebrow}</p>
+      <h1 class="page-title">{d.studies.h}</h1>
+      <p class="page-intro">{d.studies.intro}</p>
+    </section>
+
+    <section class="page__inner container">
+      <ol class="study-list">
+        {d.studies.qa.map((s) => (
+          <li class="study">
+            <div class="study__grid">
+              <p class="study__stat">{s.stat}</p>
+              <div>
+                <h2 class="study__q">{s.q}</h2>
+                <p class="study__a">{s.a}</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="page__inner container">
+      <div class="cta-box">
+        <div class="cta-box__text">
+          <h2 class="cta-box__h">{d.studies.ctaH}</h2>
+          <p class="cta-box__p">{d.studies.ctaP}</p>
+        </div>
+        <WaButton lang={lang} placement="clinical_studies" label={d.studies.ctaBtn} />
+      </div>
+    </section>
+
+    <section class="page__inner container legal">
+      <h2 class="page-h2">{d.studies.sourcesH}</h2>
+      <ul class="sources">
+        {STUDY_SOURCES.map((r) => (
+          <li class="card source" lang="en" dir="ltr">
+            <p class="source__authors">{r.authors}</p>
+            <p class="source__title">{r.title}</p>
+            <div class="source__meta">
+              <span>{r.journal} · {r.year}</span>
+              <span>DOI: {r.doi}</span>
+              <a class="link-underline" href={doiUrl(r.doi)} target="_blank" rel="noopener" lang={lang} dir={d.dir}>{d.studies.sourceLink} <Icons name="arrow" class="arrow" size={14} /></a>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="note">{d.studies.note}</p>
+    </section>
+  </div>
+</Base>

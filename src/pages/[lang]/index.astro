@@ -1,0 +1,309 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import WaButton from '../../components/WaButton.astro';
+import Icons from '../../components/Icons.astro';
+import { LANGS, t, type Lang } from '../../i18n';
+import { href } from '../../lib/routes';
+import { SITE, FORM_MESSAGE, WA_MESSAGE, whatsappUrl, googleMapsUrl, wazeUrl } from '../../data/site';
+import { LOCALITIES, FEATURED, localityName } from '../../data/localities';
+import { WA_SHOTS } from '../../data/waShots';
+import heroImg from '../../assets/img/waiting-room.png';
+import lobbyImg from '../../assets/img/lobby-glass.png';
+import deviceImg from '../../assets/img/soprano.jpeg';
+import gogglesImg from '../../assets/img/goggles.jpeg';
+import chairsImg from '../../assets/img/waiting-chairs.jpeg';
+import receptionImg from '../../assets/img/waiting-logo.jpeg';
+import logoWallImg from '../../assets/img/logo-wall.jpeg';
+import detailsImg from '../../assets/img/details.jpeg';
+import treatmentImg from '../../assets/img/laser-face.png';
+import entranceImg from '../../assets/img/entrance.png';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const featured = LOCALITIES.filter((l) => FEATURED.includes(l.en)).sort((a, b) => FEATURED.indexOf(a.en) - FEATURED.indexOf(b.en));
+const areasHref = href(lang, 'areas');
+const localityHref = href(lang, 'locality');
+const privacyHref = href(lang, 'privacy');
+const waPlain = whatsappUrl(WA_MESSAGE[lang]);
+---
+<Base lang={lang} route="home" title={d.meta.home.title} description={d.meta.home.desc}>
+  <!-- Hero -->
+  <section id="hero" class="hero">
+    <Picture src={heroImg} widths={[480, 765]} sizes="100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt={d.alt.hero} loading="eager" fetchpriority="high" decoding="async" class="hero__img" pictureAttributes={{ class: 'hero__pic' }} />
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="hero__inner container">
+      <p class="hero__eyebrow"><span class="star" aria-hidden="true">★</span><span>{d.hero.eyebrow}</span></p>
+      <h1 class="hero__title">{d.hero.title}</h1>
+      <p class="hero__claim">{d.hero.claimLine}</p>
+      <p class="hero__body">{d.hero.body}</p>
+      <div class="hero__ctas">
+        <WaButton lang={lang} placement="hero" label={d.cta.primary} />
+        <a class="btn btn--ghost" href="#lead">{d.cta.secondary}</a>
+      </div>
+      <p class="hero__fine">{d.hero.fine}</p>
+    </div>
+  </section>
+
+  <!-- Lead form -->
+  <section id="lead" class="lead">
+    <div class="container lead__grid">
+      <div>
+        <h2 class="lead__h">{d.lead.h}</h2>
+        <p class="lead__p">{d.lead.p}</p>
+      </div>
+      <div>
+        <div id="lead-status" class="lead__status" role="status" aria-live="polite" tabindex="-1" hidden>
+          <span class="check" aria-hidden="true">✓</span><span data-msg></span>
+        </div>
+        <form
+          id="lead-form"
+          class="lead__form"
+          action="#lead"
+          method="get"
+          novalidate
+          aria-label={d.a11y.formName}
+          data-err-name={d.lead.errName}
+          data-err-phone={d.lead.errPhone}
+          data-sent={d.lead.sent}
+          data-locked={d.lead.submitLocked}
+          data-submit={d.lead.submit}
+          data-wa-number={SITE.whatsappNumber}
+          data-wa-template={FORM_MESSAGE[lang]}
+        >
+          <div class="lead__row">
+            <div class="field">
+              <label for="lead-name">{d.lead.nameLabel} <span aria-hidden="true">*</span><span class="sr-only">({d.a11y.required})</span></label>
+              <input id="lead-name" name="name" type="text" autocomplete="name" required minlength="2" aria-describedby="lead-name-err" />
+              <p id="lead-name-err" class="field__err" role="alert"></p>
+            </div>
+            <div class="field">
+              <label for="lead-phone">{d.lead.phoneLabel} <span aria-hidden="true">*</span><span class="sr-only">({d.a11y.required})</span></label>
+              <p id="lead-phone-hint" class="field__hint">{d.lead.phoneHint}</p>
+              <input id="lead-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="lead-phone-hint lead-phone-err" />
+              <p id="lead-phone-err" class="field__err" role="alert"></p>
+            </div>
+          </div>
+          <div class="lead__actions">
+            <button type="submit" class="btn btn--dark">{d.lead.submit}</button>
+            <p class="lead__privacy">{d.lead.privacy} <a href={privacyHref}>{d.lead.privacyLink}</a></p>
+          </div>
+          <noscript><p class="lead__noscript">{d.lead.noscript} <a href={waPlain} target="_blank" rel="noopener">{d.cta.short}</a></p></noscript>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service areas strip -->
+  <section class="areas-strip" aria-labelledby="areas-h">
+    <div class="container areas-strip__inner">
+      <h2 id="areas-h" class="areas-strip__h">{d.areas.h}</h2>
+      <ul class="chips">
+        {featured.map((l) => (
+          <li><a class={`chip${l.page ? ' chip--primary' : ''}`} href={l.page ? localityHref : areasHref}>{localityName(l, lang)}</a></li>
+        ))}
+      </ul>
+      <a class="link-underline" href={areasHref}>{d.areas.all} <Icons name="arrow" class="arrow" size={16} /></a>
+    </div>
+  </section>
+
+  <!-- Pillars -->
+  <section class="pillars" aria-labelledby="pillars-h">
+    <div class="container">
+      <h2 id="pillars-h" class="pillars__h">{d.pillars.h}</h2>
+      <p class="pillars__sub">{d.pillars.sub}</p>
+      <p class="pillars__sub pillars__sub--last">{d.pillars.sub2}</p>
+      <ul class="pillars__grid">
+        {d.pillars.items.map((p) => (
+          <li class="pillar"><h3 class="pillar__t">{p.t}</h3><p class="pillar__b">{p.b}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Welcome -->
+  <section id="welcome" class="welcome" aria-labelledby="welcome-h">
+    <div class="container section-head">
+      <div>
+        <p class="eyebrow">{d.welcome.n}</p>
+        <h2 id="welcome-h" class="section-title">{d.welcome.h}</h2>
+      </div>
+    </div>
+    <div class="container">
+      <Picture src={lobbyImg} widths={[640, 946]} sizes="(min-width: 84rem) 76rem, 100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt={d.alt.lobby} loading="lazy" decoding="async" class="welcome__img" />
+    </div>
+  </section>
+
+  <!-- Technology -->
+  <section id="tech" class="tech" aria-labelledby="tech-h">
+    <div class="tech__grid">
+      <div class="tech__text">
+        <p class="eyebrow eyebrow--gold">{d.tech.n}</p>
+        <h2 id="tech-h" class="tech__h">{d.tech.h}</h2>
+        <p class="tech__p">{d.tech.p1}</p>
+        <p class="tech__p">{d.pillars.sub2}</p>
+        <a class="link-underline link-underline--light tech__link" href={href(lang, 'studies')}>{d.tech.studiesLink} <Icons name="arrow" class="arrow" size={16} /></a>
+      </div>
+      <div class="tech__imgs">
+        <Picture src={deviceImg} widths={[480, 900]} sizes="(min-width: 56.25rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.device} loading="lazy" decoding="async" class="img-device" />
+        <Picture src={gogglesImg} widths={[480, 800, 1200]} sizes="(min-width: 56.25rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.goggles} loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Clinic gallery -->
+  <section id="clinic" class="clinic" aria-labelledby="clinic-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{d.clinic.n}</p>
+          <h2 id="clinic-h" class="section-title">{d.clinic.h}</h2>
+        </div>
+        <p class="section-head__note">{d.clinic.p}</p>
+      </div>
+      <div class="clinic__grid">
+        <Picture src={chairsImg} widths={[480, 800, 1200]} sizes="(min-width: 56.25rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.chairs} loading="lazy" decoding="async" pictureAttributes={{ class: 'span2' }} />
+        <Picture src={receptionImg} widths={[320, 640]} sizes="(min-width: 56.25rem) 25vw, (min-width: 35rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.reception} loading="lazy" decoding="async" />
+        <Picture src={logoWallImg} widths={[320, 640]} sizes="(min-width: 56.25rem) 25vw, (min-width: 35rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.logoWall} loading="lazy" decoding="async" />
+        <Picture src={detailsImg} widths={[320, 640]} sizes="(min-width: 56.25rem) 25vw, (min-width: 35rem) 50vw, 100vw" formats={['avif', 'webp']} alt={d.alt.details} loading="lazy" decoding="async" />
+        <Picture src={lobbyImg} widths={[320, 640]} sizes="(min-width: 56.25rem) 25vw, (min-width: 35rem) 50vw, 100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt={d.alt.lobby} loading="lazy" decoding="async" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Mid-page CTA -->
+  <section class="midcta" aria-labelledby="midcta-h">
+    <Picture src={treatmentImg} widths={[574]} sizes="100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt="" loading="lazy" decoding="async" class="midcta__img" pictureAttributes={{ class: 'midcta__pic' }} />
+    <div class="midcta__overlay" aria-hidden="true"></div>
+    <div class="container midcta__inner">
+      <div class="midcta__text">
+        <h2 id="midcta-h" class="midcta__h">{d.midcta.h}</h2>
+        <p class="midcta__p">{d.midcta.p}</p>
+      </div>
+      <WaButton lang={lang} placement="mid_page" label={d.cta.primary} />
+    </div>
+  </section>
+
+  <!-- Care -->
+  <section id="care" class="care">
+    <div class="container care__grid">
+      <div class="card care__card">
+        <p class="eyebrow">{d.care.beforeK}</p>
+        <h2 class="care__h">{d.care.beforeH}</h2>
+        <ul class="care__list">{d.care.before.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div class="card care__card">
+        <p class="eyebrow">{d.care.afterK}</p>
+        <h2 class="care__h">{d.care.afterH}</h2>
+        <ul class="care__list">{d.care.after.map((x) => <li>{x}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="faq" aria-labelledby="faq-h">
+    <div class="container">
+      <div class="faq__inner">
+        <p class="eyebrow">{d.faq.n}</p>
+        <h2 id="faq-h" class="section-title">{d.faq.h}</h2>
+        <div class="faq__list">
+          {d.faq.items.map((f, i) => (
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" id={`faq-btn-${i}`} class="faq__btn" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-panel-${i}`}>
+                  <span>{f.q}</span><span class="faq__icon" aria-hidden="true">+</span>
+                </button>
+              </h3>
+              <div id={`faq-panel-${i}`} class="faq__panel" role="region" aria-labelledby={`faq-btn-${i}`} hidden={i !== 0}>
+                <p>{f.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section id="reviews" class="reviews" aria-labelledby="reviews-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{d.reviews.n}</p>
+          <h2 id="reviews-h" class="section-title">{d.reviews.h}</h2>
+        </div>
+        <p class="reviews__src">{d.reviews.src}</p>
+      </div>
+      <ul class="reviews__grid">
+        {d.reviews.items.map((r) => (
+          <li class="card review">
+            <div class="review__top">
+              <span class="stars" role="img" aria-label={d.a11y.stars}>★★★★★</span>
+              <span class="review__when">{r.when}</span>
+            </div>
+            <p class="review__title">{r.title}</p>
+            <p class="review__body">{r.body}</p>
+          </li>
+        ))}
+      </ul>
+      <h3 class="sr-only">{d.reviews.waH}</h3>
+      <div class="strip">
+        <button type="button" class="icon-btn strip__btn" data-strip-prev aria-label={d.a11y.waPrev} aria-controls="wa-strip"><Icons name="chevron" size={20} class="flip" /></button>
+        <div id="wa-strip" class="strip__track" role="region" aria-label={d.a11y.waStrip} tabindex="0">
+          {WA_SHOTS.map((s) => (
+            <figure class="strip__item">
+              <Picture src={s.src} widths={[300, 600]} sizes="15.375rem" formats={['avif', 'webp']} alt={s.alt[lang]} loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </div>
+        <button type="button" class="icon-btn strip__btn" data-strip-next aria-label={d.a11y.waNext} aria-controls="wa-strip"><Icons name="chevron" size={20} /></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <div class="container contact__grid">
+      <div class="card contact__card">
+        <p class="eyebrow">{d.contact.n}</p>
+        <h2 id="contact-h" class="contact__h">{d.contact.h}</h2>
+        <div class="contact__rows">
+          <div>
+            <p class="contact__k">{d.contact.addrK}</p>
+            <p class="contact__v">{d.contact.addr}</p>
+          </div>
+          <div>
+            <p class="contact__k">{d.contact.phoneK}</p>
+            <a class="contact__link num" href={`tel:${SITE.phoneE164}`} data-track="phone_click" data-placement="contact_card">{SITE.phoneDisplay}</a>
+          </div>
+          <div>
+            <p class="contact__k">{d.contact.mailK}</p>
+            <a class="contact__link num" href={`mailto:${SITE.email}`}>{SITE.email}</a>
+          </div>
+          <div>
+            <p class="contact__k">{d.contact.hoursK}</p>
+            <ul class="hours">
+              <li class="hours__row"><span>{d.contact.d1}</span><span class="num">{SITE.hours.weekdays.opens} – {SITE.hours.weekdays.closes}</span></li>
+              <li class="hours__row"><span>{d.contact.d2}</span><span class="num">{SITE.hours.friday.opens} – {SITE.hours.friday.closes}</span></li>
+            </ul>
+          </div>
+          <WaButton lang={lang} placement="contact_card" label={d.cta.primary} />
+        </div>
+      </div>
+      <div class="contact__side">
+        <div class="map-card">
+          <h3 class="map-card__h">{d.contact.mapH}</h3>
+          <p class="map-card__p">{d.contact.mapP}</p>
+          <div class="map-card__links">
+            <a class="btn btn--dark btn--sm" href={googleMapsUrl} target="_blank" rel="noopener">{d.contact.mapGoogle}</a>
+            <a class="btn btn--dark btn--sm" href={wazeUrl} target="_blank" rel="noopener">{d.contact.mapWaze}</a>
+          </div>
+        </div>
+        <Picture src={entranceImg} widths={[480, 946]} sizes="(min-width: 56.25rem) 55vw, 100vw" formats={['avif', 'webp']} fallbackFormat="jpg" alt={d.alt.entrance} loading="lazy" decoding="async" class="contact__img" />
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,13 @@
+---
+import { WA_MESSAGE, whatsappUrl } from '../data/site';
+import type { Lang } from '../i18n';
+import Icons from './Icons.astro';
+
+interface Props { lang: Lang; placement: string; label: string; extra?: string; class?: string }
+const { lang, placement, label, extra, class: cls = '' } = Astro.props;
+const message = extra ? `${WA_MESSAGE[lang]}${extra} ` : WA_MESSAGE[lang];
+const url = whatsappUrl(message);
+---
+<a class={`btn btn--wa ${cls}`.trim()} href={url} target="_blank" rel="noopener" data-wa data-track="whatsapp_click" data-placement={placement}>
+  <Icons name="wa" size={21} /><span>{label}</span>
+</a>

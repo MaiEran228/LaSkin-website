@@ -1,0 +1,10 @@
+---
+import LegalPage from '../../../components/LegalPage.astro';
+import { LANGS, type Lang } from '../../../i18n';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+---
+<LegalPage lang={lang} kind="accessibility" />

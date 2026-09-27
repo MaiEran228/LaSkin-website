@@ -1,0 +1,34 @@
+---
+import '../styles/global.css';
+import { dictionaries, LANGS } from '../i18n';
+import { href, withBase } from '../lib/routes';
+const csp = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests";
+---
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {import.meta.env.PROD && <meta http-equiv="Content-Security-Policy" content={csp} />}
+    <title>{dictionaries.he.meta.notFound.title}</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href={withBase('/favicon.svg')} type="image/svg+xml" />
+    <meta name="theme-color" content="#4D473B" />
+  </head>
+  <body>
+    <main id="main" class="page">
+      <div class="page__inner page__inner--narrow container notfound">
+        {LANGS.map((lang, i) => {
+          const d = dictionaries[lang];
+          return (
+            <section class="notfound__block" lang={lang} dir={d.dir}>
+              {i === 0 ? <h1>{d.notFound.h}</h1> : <h2>{d.notFound.h}</h2>}
+              <p>{d.notFound.p}</p>
+              <a class="link-underline" href={href(lang, 'home')}>{d.notFound.home}</a>
+            </section>
+          );
+        })}
+      </div>
+    </main>
+  </body>
+</html>

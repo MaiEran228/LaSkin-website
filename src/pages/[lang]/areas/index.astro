@@ -1,0 +1,32 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { LANGS, t, type Lang } from '../../../i18n';
+import { href } from '../../../lib/routes';
+import { LOCALITIES, localityName } from '../../../data/localities';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+---
+<Base lang={lang} route="areas" title={d.meta.areas.title} description={d.meta.areas.desc}>
+  <div class="page">
+    <Breadcrumb lang={lang} items={[{ label: d.areas.crumb }]} class="page__inner page__inner--wide" />
+    <section class="page__inner page__inner--wide container page-hero areas-index">
+      <h1 class="page-title">{d.areas.indexH}</h1>
+      <p class="page-intro">{d.areas.indexP}</p>
+      <ul class="chips chips--index">
+        {LOCALITIES.map((l) =>
+          l.page ? (
+            <li><a class="chip chip--primary" href={href(lang, 'locality')}>{localityName(l, lang)}<span class="sr-only"> — {d.areas.onlyPage}</span></a></li>
+          ) : (
+            <li class="chip chip--static">{localityName(l, lang)}</li>
+          ),
+        )}
+      </ul>
+      <p class="areas-note">{d.areas.note}</p>
+    </section>
+  </div>
+</Base>

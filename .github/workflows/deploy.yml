@@ -1,0 +1,56 @@
+# Build, test and deploy the La Skin site to GitHub Pages.
+#
+# The deploy job only runs when the repository variable DEPLOY_ENABLED is "true"
+# (Settings → Secrets and variables → Actions → Variables). Until then, pushes do nothing.
+# DEPLOY_TARGET selects the URL scheme:
+#   preview    → https://<owner>.github.io/LaSkin-website/  (noindex, sub-path)
+#   production → https://laskin.co.il/                       (custom domain, indexable)
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_TARGET: ${{ vars.DEPLOY_TARGET || 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npm test
+      - name: Add custom-domain CNAME (production only)
+        if: env.DEPLOY_TARGET == 'production'
+        run: echo "laskin.co.il" > dist/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: vars.DEPLOY_ENABLED == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
