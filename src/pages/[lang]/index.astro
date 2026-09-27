@@ -124,6 +124,43 @@ const waPlain = whatsappUrl(WA_MESSAGE[lang]);
     </div>
   </section>
 
+  <!-- Reviews -->
+  <section id="reviews" class="reviews" aria-labelledby="reviews-h">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">{d.reviews.n}</p>
+          <h2 id="reviews-h" class="section-title">{d.reviews.h}</h2>
+        </div>
+        <p class="reviews__src">{d.reviews.src}</p>
+      </div>
+      <ul class="reviews__grid">
+        {d.reviews.items.map((r) => (
+          <li class="card review">
+            <div class="review__top">
+              <span class="stars" role="img" aria-label={d.a11y.stars}>★★★★★</span>
+              <span class="review__when">{r.when}</span>
+            </div>
+            <p class="review__title">{r.title}</p>
+            <p class="review__body">{r.body}</p>
+          </li>
+        ))}
+      </ul>
+      <h3 class="sr-only">{d.reviews.waH}</h3>
+      <div class="strip">
+        <button type="button" class="icon-btn strip__btn" data-strip-prev aria-label={d.a11y.waPrev} aria-controls="wa-strip"><Icons name="chevron" size={20} class="flip" /></button>
+        <div id="wa-strip" class="strip__track" role="region" aria-label={d.a11y.waStrip} tabindex="0">
+          {WA_SHOTS.map((s) => (
+            <figure class="strip__item">
+              <Picture src={s.src} widths={[300, 600]} sizes="15.375rem" formats={['avif', 'webp']} alt={s.alt[lang]} loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </div>
+        <button type="button" class="icon-btn strip__btn" data-strip-next aria-label={d.a11y.waNext} aria-controls="wa-strip"><Icons name="chevron" size={20} /></button>
+      </div>
+    </div>
+  </section>
+
   <!-- Welcome -->
   <section id="welcome" class="welcome" aria-labelledby="welcome-h">
     <div class="container section-head">
@@ -223,43 +260,6 @@ const waPlain = whatsappUrl(WA_MESSAGE[lang]);
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Reviews -->
-  <section id="reviews" class="reviews" aria-labelledby="reviews-h">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">{d.reviews.n}</p>
-          <h2 id="reviews-h" class="section-title">{d.reviews.h}</h2>
-        </div>
-        <p class="reviews__src">{d.reviews.src}</p>
-      </div>
-      <ul class="reviews__grid">
-        {d.reviews.items.map((r) => (
-          <li class="card review">
-            <div class="review__top">
-              <span class="stars" role="img" aria-label={d.a11y.stars}>★★★★★</span>
-              <span class="review__when">{r.when}</span>
-            </div>
-            <p class="review__title">{r.title}</p>
-            <p class="review__body">{r.body}</p>
-          </li>
-        ))}
-      </ul>
-      <h3 class="sr-only">{d.reviews.waH}</h3>
-      <div class="strip">
-        <button type="button" class="icon-btn strip__btn" data-strip-prev aria-label={d.a11y.waPrev} aria-controls="wa-strip"><Icons name="chevron" size={20} class="flip" /></button>
-        <div id="wa-strip" class="strip__track" role="region" aria-label={d.a11y.waStrip} tabindex="0">
-          {WA_SHOTS.map((s) => (
-            <figure class="strip__item">
-              <Picture src={s.src} widths={[300, 600]} sizes="15.375rem" formats={['avif', 'webp']} alt={s.alt[lang]} loading="lazy" decoding="async" />
-            </figure>
-          ))}
-        </div>
-        <button type="button" class="icon-btn strip__btn" data-strip-next aria-label={d.a11y.waNext} aria-controls="wa-strip"><Icons name="chevron" size={20} /></button>
       </div>
     </div>
   </section>

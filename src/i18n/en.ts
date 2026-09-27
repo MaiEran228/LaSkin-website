@@ -94,14 +94,14 @@ export const en: Dict = {
       { t: 'Parking and private entrance', b: 'Arrive, park and walk straight in — no shared lobby.' },
     ],
   },
-  welcome: { n: '01 — Welcome', h: 'Step in, and take a breath' },
+  welcome: { n: '02 — Welcome', h: 'Step in, and take a breath' },
   tech: {
-    n: '02 — The technology',
+    n: '03 — The technology',
     h: 'Soprano Titanium SHR · 2026 model',
     p1: 'SHR (Super Hair Removal) heats the follicle gradually across multiple passes, with continuous contact cooling at the handpiece — a moving scan rather than a single powerful pulse.',
     studiesLink: 'Clinical studies and sources',
   },
-  clinic: { n: '03 — The clinic', h: 'Where it happens', p: 'Mevo HaHoresh 10, Har Adar. Parking and a private entrance, a quiet space, no overlapping appointments.' },
+  clinic: { n: '04 — The clinic', h: 'Where it happens', p: 'Mevo HaHoresh 10, Har Adar. Parking and a private entrance, a quiet space, no overlapping appointments.' },
   midcta: { h: 'A question before you book?', p: 'Message us on WhatsApp. We reply with a straight answer, a quote and a possible slot.' },
   care: {
     beforeK: 'Before treatment', beforeH: 'Preparation', afterK: 'After treatment', afterH: 'Follow-up',
@@ -119,7 +119,7 @@ export const en: Dict = {
     ],
   },
   faq: {
-    n: '04 — Questions and answers',
+    n: '05 — Questions and answers',
     h: 'The 5 most common questions',
     items: [
       { q: 'How many sessions are needed?', a: 'It varies from person to person — it depends on the area, hair colour, skin type and hormonal factors. We estimate a reasonable range together at the first appointment and update it as we go.' },
@@ -130,7 +130,7 @@ export const en: Dict = {
     ],
   },
   reviews: {
-    n: '05 — Reviews',
+    n: '01 — Reviews',
     h: 'What people say',
     src: 'Reviews from the Google Business profile',
     waH: 'Messages we received from clients',
