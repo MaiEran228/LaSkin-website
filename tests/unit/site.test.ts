@@ -46,7 +46,7 @@ describe('content completeness', () => {
     expect(LOCALITIES.filter((l) => l.page).map((l) => l.page)).toEqual(['mevaseret-zion']);
   });
   it('every WhatsApp screenshot carries a transcript in all three languages', () => {
-    expect(WA_SHOTS).toHaveLength(12);
+    expect(WA_SHOTS).toHaveLength(11);
     for (const s of WA_SHOTS) for (const lang of LANGS) expect(s.alt[lang].length).toBeGreaterThan(40);
   });
 });

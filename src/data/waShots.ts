@@ -1,7 +1,6 @@
 import type { Lang } from '../i18n/types';
 import type { ImageMetadata } from 'astro';
 
-import wa01 from '../assets/img/wa/wa-01.jpeg';
 import wa02 from '../assets/img/wa/wa-02.jpeg';
 import wa03 from '../assets/img/wa/wa-03.jpeg';
 import wa04 from '../assets/img/wa/wa-04.jpeg';
@@ -28,10 +27,10 @@ const prefix: Record<Lang, string> = {
 };
 
 const shots: { src: ImageMetadata; he: string; en: string; ar: string }[] = [
-  { src: wa01,
-    he: '"היי בוקר טוב, חייבת להגיד לך שאני מרוצה בטירוף. לא האמנתי שזה יעבוד על צבע עור כמו שלי, וראיתי תוצאות כל כך מהר! אין כיף כזה."',
-    en: '"Hi, good morning, I have to tell you I am incredibly happy. I did not believe it would work on a skin tone like mine, and I saw results so quickly! Such a joy."',
-    ar: '"صباح الخير، لا بد أن أقول لك إنني راضية جداً. لم أصدق أن هذا سينجح مع لون بشرة مثل بشرتي، ورأيت نتائج بهذه السرعة! يا لها من فرحة."' },
+  { src: wa05,
+    he: '"בוקר טוב, רוצה להגיד לך ממש תודה! פשוט קסם הלייזר. ממש בקושי גדל, וגם המעט שגדל קל מאוד להוריד. ממש אלופה."',
+    en: '"Good morning, I want to say a big thank you! The laser is simply magic. It barely grows back, and the little that does is very easy to remove. You are a champion."',
+    ar: '"صباح الخير، أريد أن أشكرك كثيراً! الليزر سحر بكل معنى الكلمة. بالكاد ينمو الشعر، والقليل الذي ينمو سهل جداً إزالته. أنتِ بطلة."' },
   { src: wa02,
     he: '"וואי תקשיבי איזה שינוי אחרי טיפול אחד! מלא שיערות נשרו, זה כזה כיף! איך לא עשיתי את זה כל השנים האלה."',
     en: '"Wow, what a change after a single treatment! So much hair fell out, it is such a joy! Why did I not do this all these years."',
@@ -44,10 +43,6 @@ const shots: { src: ImageMetadata; he: string; en: string; ar: string }[] = [
     he: '"היי, רציתי רק להגיד שזה מטורף — עשיתי בסך הכל טיפול אחד ואני כבר מרגישה שינוי מטורף. הצמיחה איטית ממש, אין כיף כזה."',
     en: '"Hi, I just wanted to say this is crazy — I have had only one treatment and I already feel a huge change. Regrowth is really slow, such a joy."',
     ar: '"مرحباً، أردت فقط أن أقول إن هذا مذهل — أجريت جلسة واحدة فقط وأشعر بتغيير كبير. النمو بطيء جداً، يا له من شعور رائع."' },
-  { src: wa05,
-    he: '"בוקר טוב, רוצה להגיד לך ממש תודה! פשוט קסם הלייזר. ממש בקושי גדל, וגם המעט שגדל קל מאוד להוריד. ממש אלופה."',
-    en: '"Good morning, I want to say a big thank you! The laser is simply magic. It barely grows back, and the little that does is very easy to remove. You are a champion."',
-    ar: '"صباح الخير، أريد أن أشكرك كثيراً! الليزر سحر بكل معنى الكلمة. بالكاد ينمو الشعر، والقليل الذي ينمو سهل جداً إزالته. أنتِ بطلة."' },
   { src: wa06,
     he: '"את האמת שאני מרוצה מהמצב עכשיו, ברוך השם! כשאראה שאני צריכה עוד טיפול אדבר איתך ונקבע. הבאת אותי למקום שאף אחד אחר לא!"',
     en: '"Honestly I am happy with how things are now, thank God! When I see I need another treatment I will talk to you and we will book. You got me to a place no one else did!"',

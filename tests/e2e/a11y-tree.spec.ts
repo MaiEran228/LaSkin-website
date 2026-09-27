@@ -23,7 +23,7 @@ test('landmarks and names on the Hebrew home page', async ({ page }) => {
   await expect(page.getByRole('textbox', { name: /טלפון/ })).toBeVisible();
   // Screenshot images carry transcripts, not generic alts.
   const alts = await page.locator('#wa-strip img').evaluateAll((els) => els.map((e) => e.getAttribute('alt') ?? ''));
-  expect(alts.length).toBe(12);
+  expect(alts.length).toBe(11);
   for (const a of alts) expect(a.length).toBeGreaterThan(40);
 });
 
